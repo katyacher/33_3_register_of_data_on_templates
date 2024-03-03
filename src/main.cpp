@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include "register.h"
 
 
 template<typename T1, typename T2>
