@@ -39,20 +39,19 @@ public:
         return false;
     }
 
-    bool remove(const T1& item){
+    void remove(const T1& item){
         
         if(storage.size() == 0) {
            throw std::invalid_argument("Error: storage is empty!");
         }
 
-        for(auto& pair: storage){
-            if(pair.key == item){
-                storage.erase(pair);
-                return true;
+        for(auto it = storage.begin(); it != storage.end();){
+            if(it->key == item){
+                it = storage.erase(it);
+            } else {
+                ++it;
             }
         }
-
-        return false;
     }
 
     void print (){
@@ -64,19 +63,57 @@ public:
     
 };
 
+
+
 int main(int, char**){
     std::cout << "Hello, from 33_3_storage_of_data_on_templates!\n";
 
     Register<int, std::string> reg;
     reg.add(1,"one");
-    reg.add(2,"two");
+    reg.add(2, "two");
     reg.add(3, "tree");
     reg.add(3, "four");
 
-    reg.remove(3);
+    reg.print();
 
+    std::cout << reg.find(2) << ", " << reg.find(3) << std::endl;
+    reg.remove(3);
     std::cout << reg.find(2) << ", " << reg.find(3) << std::endl;
 
     reg.print();
+
+    Register<double, double> reg2;
+    reg2.add(1.5,1.0);
+    reg2.add(2.5,2.0);
+    reg2.add(3.5, 3.0);
+
+    reg2.print();
+
+
+    Register<std::string, double> reg3;
+    reg3.add("one", 1.1);
+    reg3.add("two", 2.2);
+    reg3.add("tree", 3.3);
+
+    reg3.print();
+/*
+    std::string ans;
+
+    do{
+        std::cout << "Enter command(create/add/remove/print/find/exit): ";
+        std::cin >> ans;
+
+        if(ans == "add")
+            reg.add();
+        else if(ans == "remove")
+            reg.remove();
+        else if(ans == "print")
+            reg.print();
+        else if(ans == "find")
+            reg.find();
+    }
+    while(ans != "exit");
+
+    */
 
 }
