@@ -2,8 +2,6 @@
 #include <string>
 #include <vector>
 
-
-
 template<typename T1, typename T2>
 class Register{
 
@@ -26,6 +24,7 @@ public:
         storage.push_back(Pair(key, value));
     }
 
+
     bool find(const T1& item){
         if(storage.size() == 0) {
            throw std::invalid_argument("Error: storage is empty!");
@@ -39,8 +38,9 @@ public:
         return false;
     }
 
-    void remove(const T1& item){
-        
+
+    bool remove(const T1& item){
+        bool result = false;
         if(storage.size() == 0) {
            throw std::invalid_argument("Error: storage is empty!");
         }
@@ -48,13 +48,16 @@ public:
         for(auto it = storage.begin(); it != storage.end();){
             if(it->key == item){
                 it = storage.erase(it);
+                result = true;
             } else {
                 ++it;
             }
         }
+
+        return result;
     }
 
-    void print (){
+    void print() const{
         for(int i = 0; i < storage.size(); ++i){
             std::cout << "[" << i << "] key: " << storage[i].key <<
                 ", value: " << storage[i].value << std::endl;

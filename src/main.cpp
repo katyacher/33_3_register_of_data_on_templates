@@ -3,117 +3,114 @@
 #include <string>
 #include "register.h"
 
-
 template<typename T1, typename T2>
-class Register{
+class user_data_entry{
+    Register<T1, T2> reg;
 
-    struct Pair{
-        T1 key;
-        T2 value;
-        Pair(T1 _key, T2 _value): key(_key), value(_value){}; 
-    };
+public: 
+    void work(){
+        std::string ans;
+        do{
+            std::cout << "Enter a command(add/remove/print/find/exit): ";
+            std::cin >> ans;
 
-    std::vector<Pair> storage;
-    
-public:
-    Register(){};
+            if(ans == "add"){
+                std::cout << "Enter key: ";
+                T1 key;
+                std::cin >> key;
 
-    Register(const T1& key, const T2& value){
-        storage.push_back(Pair(key, value));
-    } 
+                if(std::cin.fail()) {
+                    std::cin.clear();
+                    std::string str;
+                    std::getline(std::cin, str);
+                    std::cout << "Wrong type. Try again." << std::endl;
+                    continue;
+                }
+  
+                std::cout << "Enter value: ";
+                T2 value;
+                std::cin >> value;
 
-    void add(const T1& key, const T2 value){
-        storage.push_back(Pair(key, value));
-    }
+                if(std::cin.fail()) {
+                    std::cin.clear();
+                    std::string str;
+                    std::getline(std::cin, str);
+                    std::cout << "Wrong type. Try again." << std::endl;
+                    continue;
+                }
 
-    bool find(const T1& item){
-        if(storage.size() == 0) {
-           throw std::invalid_argument("Error: storage is empty!");
-        }
+                reg.add(key, value);
 
-        for(const auto& _pair: storage){
-            if(_pair.key == item){
-                return true;
+            }else if(ans == "remove"){
+                std::cout << "Enter key: ";
+                T1 key;
+                std::cin >> key;
+
+                if(std::cin.fail()) {
+                    std::cin.clear();
+                    std::string str;
+                    std::getline(std::cin, str);
+                    std::cout << "Wrong type. Try again." << std::endl;
+                    continue;
+                }
+
+                try{
+                    if(reg.remove(key)){
+                        std::cout << "The data has been deleted" << std::endl;
+                    } else {
+                        std::cout << "No such data." << std::endl;
+                    } 
+                } catch(std::invalid_argument& x){
+                    std::cout << x.what() << std::endl;
+                }
+                
+            }else if(ans == "print"){
+                reg.print();
+
+            } else if(ans == "find"){
+                std::cout << "Enter key: ";
+                T1 key;
+                std::cin >> key;
+
+                if(std::cin.fail()) {
+                    std::cin.clear();
+                    std::string str;
+                    std::getline(std::cin, str);
+                    std::cout << "Wrong type. Try again." << std::endl;
+                    continue;
+                }
+
+                try{
+                    if(reg.find(key)){
+                        std::cout << "The data is in the registry." << std::endl;
+                    } else {
+                        std::cout << "No such data." << std::endl;
+                    }
+                }catch(std::invalid_argument& x){
+                    std::cout << x.what() << std::endl;
+                }
             }
-        }
-        return false;
-    }
 
-    void remove(const T1& item){
-        
-        if(storage.size() == 0) {
-           throw std::invalid_argument("Error: storage is empty!");
-        }
-
-        for(auto it = storage.begin(); it != storage.end();){
-            if(it->key == item){
-                it = storage.erase(it);
-            } else {
-                ++it;
-            }
-        }
+        }while(ans != "exit");
     }
-
-    void print (){
-        for(int i = 0; i < storage.size(); ++i){
-            std::cout << "[" << i << "] key: " << storage[i].key <<
-                ", value: " << storage[i].value << std::endl;
-        }
-    }
-    
 };
 
 
 
 int main(int, char**){
     std::cout << "Hello, from 33_3_storage_of_data_on_templates!\n";
+    
+    std::cout << "\n********Storage  <int, std::string> example **********\n" << std::endl;
+    user_data_entry<int, std::string> example1;
+    example1.work();
 
-    Register<int, std::string> reg;
-    reg.add(1,"one");
-    reg.add(2, "two");
-    reg.add(3, "tree");
-    reg.add(3, "four");
+    std::cout << "\n********Storage  <int, double> example **********\n" << std::endl;
+    user_data_entry<int, double> example2;
+    example2.work();
 
-    reg.print();
+    std::cout << "\n********Storage  <std::string, std::string> example **********\n" << std::endl;
+    user_data_entry<std::string, std::string> example3;
+    example3.work();
 
-    std::cout << reg.find(2) << ", " << reg.find(3) << std::endl;
-    reg.remove(3);
-    std::cout << reg.find(2) << ", " << reg.find(3) << std::endl;
-
-    reg.print();
-
-    Register<double, double> reg2;
-    reg2.add(1.5,1.0);
-    reg2.add(2.5,2.0);
-    reg2.add(3.5, 3.0);
-
-    reg2.print();
-
-
-    Register<std::string, double> reg3;
-    reg3.add("one", 1.1);
-    reg3.add("two", 2.2);
-    reg3.add("tree", 3.3);
-
-    reg3.print();
-/*
-    std::string ans;
-
-    do{
-        std::cout << "Enter command(create/add/remove/print/find/exit): ";
-        std::cin >> ans;
-
-        if(ans == "add")
-            reg.add();
-        else if(ans == "remove")
-            reg.remove();
-        else if(ans == "print")
-            reg.print();
-        else if(ans == "find")
-            reg.find();
-    }
-    while(ans != "exit");
-
-    */
-
+return 0;
 }
